@@ -47,8 +47,21 @@ module Simpler
     end
 
     def render(template)
-      @request.env['simpler.template'] = template
+      if template.is_a?(Hash)
+        type = template.keys.first
+        @request.env['simpler.rendering_type'] = type
+        @request.env['simpler.rendering_body'] = template[type]
+      else
+        @request.env['simpler.template'] = template
+      end
     end
 
+    def status(code)
+      @response.status = code
+    end
+
+    def headers
+      @response.headers
+    end
   end
 end

@@ -10,9 +10,12 @@ module Simpler
     end
 
     def render(binding)
-      template = File.read(template_path)
-
-      ERB.new(template).result(binding)
+      if @env['simpler.rendering_type'] == :plain
+        @env['simpler.rendering_body']
+      else
+        template = File.read(template_path)
+        ERB.new(template).result(binding)
+      end
     end
 
     private
