@@ -44,11 +44,25 @@ module Simpler
 
     def params
       @request.params
+      @request.env['simpler.route_params'].merge!(@request.params)
     end
 
     def render(template)
-      @request.env['simpler.template'] = template
+      if template.is_a?(Hash)
+        type = template.keys.first
+        @request.env['simpler.rendering_type'] = type
+        @request.env['simpler.rendering_body'] = template[type]
+      else
+        @request.env['simpler.template'] = template
+      end
     end
 
+    def status(code)
+      @response.status = code
+    end
+
+    def headers
+      @response.headers
+    end
   end
 end
